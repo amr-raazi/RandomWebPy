@@ -34,6 +34,7 @@ password_box.send_keys(password)
 login_button = browser.find_element_by_xpath(
     "/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div/div[3]/button")
 login_button.click()
+print("Logged in")
 time.sleep(5)
 
 # comment
@@ -62,6 +63,7 @@ try:
                 additional_big_delay = random.randint(20, 30)
                 print(f"Resting for {additional_big_delay} seconds")
                 time.sleep(additional_big_delay)
+                browser.get(post_link)
         except ElementClickInterceptedException:
             print(f"{count} comments were sent")
             print("Delay is too low")
