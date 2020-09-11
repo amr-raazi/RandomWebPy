@@ -58,6 +58,6 @@ try:
             print("Delay too low")
             exit()
 except NoSuchElementException or InvalidArgumentException:
-    print("Private Account You are not following or invalid link")
+    print("Private Account you are not following or invalid link")
 browser.close()
 print(f"{count} comments were sent")
