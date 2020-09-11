@@ -14,6 +14,7 @@ login_file = toml.load("login.toml")
 user = login_file.get("insta_user")
 password = login_file.get("insta_pass")
 headless = False
+big_delay_ever_x_comments = 7
 
 # program variables
 count = 0
@@ -45,17 +46,25 @@ try:
         "/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[3]/div/form/button")
     while count < number_of_comments:
         try:
+            small_delay = random.randint(6, 12)
             comment = f""
             comment_box = browser.find_element_by_xpath(
                 "/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[3]/div/form/textarea")
             comment_box.click()
             comment_box.send_keys(comment)
+            time.sleep(1)
             post_button.click()
             count += 1
             print(f'{count} comments sent')
-            time.sleep(random.randint(2, 8))
+            print(f'Resting for {small_delay} seconds')
+            time.sleep(small_delay)
+            if count % big_delay_ever_x_comments == 0:
+                additional_big_delay = random.randint(20, 30)
+                print(f"Resting for {additional_big_delay} seconds")
+                time.sleep(additional_big_delay)
         except ElementClickInterceptedException:
-            print("Delay too low")
+            print(f"{count} comments were sent")
+            print("Delay is too low")
             exit()
 except NoSuchElementException or InvalidArgumentException:
     print("Private Account you are not following or invalid link")
