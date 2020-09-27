@@ -78,13 +78,29 @@ def convert_list_into_text(selenium_list):
 login(browser, login_user, login_pass)
 
 # get following list
-number_of_following = int(open_following(username).replace(" following", ""))
+number_of_following = str(open_following(username).replace(" following", ""))
+if "k" in number_of_following:
+    number_of_following = number_of_following.replace("k", "")
+    number_of_following = int(number_of_following) * 1000
+number_of_following = str(number_of_following)
+if "m" in number_of_following:
+    number_of_following = number_of_following.replace("k", "")
+    number_of_following = int(number_of_following) * 1000000
+number_of_following = int(number_of_following)
 scroll(number_of_following)
 following_list = browser.find_elements_by_class_name("wo9IH")
 following_list = convert_list_into_text(following_list)
 
 # get followers list
-number_of_followers = int(open_followers(username).replace(" followers", ""))
+number_of_followers = str(open_followers(username).replace(" followers", ""))
+if "k" in number_of_followers:
+    number_of_followers = number_of_followers.replace("k", "")
+    number_of_followers = int(number_of_followers) * 1000
+number_of_followers = str(number_of_followers)
+if "m" in number_of_followers:
+    number_of_followers = number_of_followers.replace("k", "")
+    number_of_followers = int(number_of_followers) * 1000000
+number_of_followers = int(number_of_followers)
 scroll(number_of_followers)
 followers_list = browser.find_elements_by_class_name("wo9IH")
 followers_list = convert_list_into_text(followers_list)
