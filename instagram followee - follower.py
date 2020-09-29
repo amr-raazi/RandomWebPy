@@ -33,32 +33,28 @@ def login(driver, login_username, login_password):
 
 
 def open_following(user):
-    user_link = "https:\\instagram.com/" + user
-    browser.get(user_link)
+    browser.get("https://www.instagram.com/" + user)
     following_number = browser.find_element_by_css_selector("li.Y8-fY:nth-child(3) > a:nth-child(1)").text
     time.sleep(2)
-    following_button = browser.find_element_by_partial_link_text('following')
-    following_button.click()
+    browser.find_element_by_partial_link_text('following').click()
     time.sleep(5)
     return following_number
 
 
 def open_followers(user):
-    user_link = "https:\\instagram.com/" + user
-    browser.get(user_link)
+    browser.get("https://instagram.com/" + user)
     followers_number = browser.find_element_by_css_selector("li.Y8-fY:nth-child(2) > a:nth-child(1)").text
     time.sleep(2)
-    followers_button = browser.find_element_by_partial_link_text('followers')
-    followers_button.click()
+    browser.find_element_by_partial_link_text('followers').click()
     time.sleep(5)
     return followers_number
 
 
 def scroll(number):
-    browser.find_element_by_class_name("_1XyCr").click()
+    browser.find_element_by_class_name("PZuss").click()
     for i in range(math.ceil(number / 11)):
         browser.find_element_by_css_selector("body").send_keys(Keys.CONTROL, Keys.END)
-        time.sleep(4)
+        time.sleep(1)
 
 
 def convert_list_into_text(selenium_list):
@@ -76,40 +72,21 @@ def convert_list_into_text(selenium_list):
 
 # login
 login(browser, login_user, login_pass)
+print("Logged in")
 
 # get following list
 number_of_following = str(open_following(username).replace(" following", ""))
-if "k" in number_of_following:
-    number_of_following = number_of_following.replace("k", "")
-    number_of_following = int(number_of_following) * 1000
-number_of_following = str(number_of_following)
-if "m" in number_of_following:
-    number_of_following = number_of_following.replace("k", "")
-    number_of_following = int(number_of_following) * 1000000
-number_of_following = int(number_of_following)
-scroll(number_of_following)
+scroll(int(number_of_following))
 following_list = browser.find_elements_by_class_name("wo9IH")
 following_list = convert_list_into_text(following_list)
+print("Scraped following")
 
 # get followers list
 number_of_followers = str(open_followers(username).replace(" followers", ""))
-if "k" in number_of_followers:
-    number_of_followers = number_of_followers.replace("k", "")
-    number_of_followers = int(number_of_followers) * 1000
-number_of_followers = str(number_of_followers)
-if "m" in number_of_followers:
-    number_of_followers = number_of_followers.replace("k", "")
-    number_of_followers = int(number_of_followers) * 1000000
-number_of_followers = int(number_of_followers)
-scroll(number_of_followers)
+scroll(int(number_of_followers))
 followers_list = browser.find_elements_by_class_name("wo9IH")
 followers_list = convert_list_into_text(followers_list)
+print("Scraped followers")
 
 browser.quit()
-
-# check differences
-differences = []
-for following in following_list:
-    if following not in followers_list:
-        differences.append(following)
-print(differences)
+print(list(set(following_list) - set(followers_list)))
