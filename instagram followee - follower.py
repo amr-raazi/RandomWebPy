@@ -52,7 +52,7 @@ def open_followers(user):
 
 def scroll(number):
     browser.find_element_by_class_name("PZuss").click()
-    for i in range(math.ceil(number / 11)):
+    for _ in range(math.ceil(number / 11)):
         browser.find_element_by_css_selector("body").send_keys(Keys.CONTROL, Keys.END)
         time.sleep(1)
 
@@ -74,19 +74,27 @@ def convert_list_into_text(selenium_list):
 login(browser, login_user, login_pass)
 print("Logged in")
 
-# get following list
-number_of_following = str(open_following(username).replace(" following", ""))
-scroll(int(number_of_following))
-following_list = browser.find_elements_by_class_name("wo9IH")
-following_list = convert_list_into_text(following_list)
-print("Scraped following")
 
-# get followers list
-number_of_followers = str(open_followers(username).replace(" followers", ""))
-scroll(int(number_of_followers))
-followers_list = browser.find_elements_by_class_name("wo9IH")
-followers_list = convert_list_into_text(followers_list)
-print("Scraped followers")
+def main():
+    # get following list
+    number_of_following = str(open_following(username).replace(" following", ""))
+    scroll(int(number_of_following))
+    following_list = browser.find_elements_by_class_name("wo9IH")
+    following_list = convert_list_into_text(following_list)
+    print("Scraped following")
 
-browser.quit()
-print(list(set(following_list) - set(followers_list)))
+    # get followers list
+    number_of_followers = str(open_followers(username).replace(" followers", ""))
+    scroll(int(number_of_followers))
+    followers_list = browser.find_elements_by_class_name("wo9IH")
+    followers_list = convert_list_into_text(followers_list)
+    print("Scraped followers")
+
+    browser.quit()
+    acceptable = set()
+    diff = set(following_list) - set(followers_list)
+    print(diff - acceptable)
+
+
+if __name__ == '__main__':
+    main()
