@@ -19,8 +19,8 @@ login_pass = login_file.get("insta_pass")
 username = ""
 
 
-def login(driver, login_username, login_password):
-    driver.get("https://www.instagram.com")
+def login(login_username, login_password):
+    browser.get("https://www.instagram.com")
     time.sleep(3)
     username_box = browser.find_element_by_name("username")
     username_box.send_keys(login_username)
@@ -50,9 +50,9 @@ def open_followers(user):
     return followers_number
 
 
-def scroll(number):
+def scroll(n):
     browser.find_element_by_class_name("PZuss").click()
-    for _ in range(math.ceil(number / 11)):
+    for _ in range(math.ceil(n / 9)):
         browser.find_element_by_css_selector("body").send_keys(Keys.CONTROL, Keys.END)
         time.sleep(1)
 
@@ -70,12 +70,10 @@ def convert_list_into_text(selenium_list):
     return out
 
 
-# login
-login(browser, login_user, login_pass)
-print("Logged in")
-
-
 def main():
+    print("Logged in")
+    login(login_user, login_pass)
+
     # get following list
     number_of_following = str(open_following(username).replace(" following", ""))
     scroll(int(number_of_following))
@@ -93,8 +91,12 @@ def main():
     browser.quit()
     acceptable = set()
     diff = set(following_list) - set(followers_list)
-    print(diff - acceptable)
+    return diff - acceptable
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        print(main())
+    except Exception as e:
+        print(e)
+        browser.close()
